@@ -139,6 +139,7 @@ public class ItemShopUtils {
                     player.sendMessage(Config.message_buy.replace("{item}", name));
                 }
             } else if (i < 1) {
+                player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), Float.parseFloat("1.0"), Float.parseFloat("1.0"));
                 player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
             }
         }
