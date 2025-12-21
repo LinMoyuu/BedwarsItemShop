@@ -129,6 +129,13 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/BedwarsXP-2.1.3.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>me.ram</groupId>
+      <artifactId>BedwarsScoreBoardAddon</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/BedwarsScoreBoardAddon-1.0-SNAPSHOT.jar</systemPath>
+    </dependency>
   </dependencies>
   <properties>
     <java.version>1.8</java.version>

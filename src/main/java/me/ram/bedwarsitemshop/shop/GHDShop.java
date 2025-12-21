@@ -5,6 +5,7 @@ import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.villager.MerchantCategory;
 import me.ram.bedwarsitemshop.utils.ColorUtil;
 import me.ram.bedwarsitemshop.utils.ItemShopUtils;
+import me.ram.bedwarsitemshop.utils.UpgradeUtils;
 import me.ram.bedwarsitemshop.xpshop.ItemShop;
 import me.ram.bedwarsitemshop.xpshop.XPItemShop;
 import org.bukkit.Bukkit;
@@ -18,6 +19,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Map;
+
+import static me.ram.bedwarsscoreboardaddon.utils.Utils.isXpMode;
 
 public class GHDShop implements Shop {
 
@@ -91,22 +94,36 @@ public class GHDShop implements Shop {
 
     public void onClick(Game game, InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
-        if (e.getCurrentItem().getItemMeta().getItemFlags().contains(ItemFlag.HIDE_ENCHANTS)) {
+
+        if (e.getCurrentItem().isSimilar(ItemShopUtils.getFrameItem(7)) && e.getCurrentItem().isSimilar(ItemShopUtils.getFrameItem(5))) {
+            return;
+        }
+
+        if (ItemShopUtils.getBackItem().isSimilar(e.getCurrentItem())) {
+            game.getNewItemShop(player).openCategoryInventory(player);
             return;
         }
         Map<String, ItemStack> resname = ItemShopUtils.getResourceList();
-        if (e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getItemMeta().getDisplayName().contains("§s§h§o§p§r§e§s")) {
+        ItemStack currentItem = e.getCurrentItem();
+        if (!ItemShopUtils.isShopItem(e.getCurrentItem())) {
+            if (isXpMode(game)) {
+                new XPItemShop(game.getNewItemShop(player).getCategories(), game).handleInventoryClick(e, game, player);
+            } else {
+                new ItemShop(game.getNewItemShop(player).getCategories()).handleInventoryClick(e, game, player);
+            }
             return;
         }
-        if (ItemShopUtils.isShopItem(e.getCurrentItem())) {
-            if (e.isShiftClick()) {
-                int ba = 64 / e.getCurrentItem().getAmount();
-                ItemShopUtils.buyItem(game, player, e.getCurrentItem(), resname, ba);
-            } else {
-                ItemShopUtils.buyItem(game, player, e.getCurrentItem(), resname, 1);
-            }
-        } else if (!e.getCurrentItem().isSimilar(ItemShopUtils.getFrameItem(7)) && !e.getCurrentItem().isSimilar(ItemShopUtils.getFrameItem(5))) {
-            game.getNewItemShop(player).handleInventoryClick(e, game, player);
+
+        if (UpgradeUtils.isUpgradeItem(currentItem) && !isXpMode(game)) {
+            ItemShopUtils.buyUpgrade(game, player, currentItem, resname);
+            return;
+        }
+
+        if (e.isShiftClick()) {
+            int ba = 64 / currentItem.getAmount();
+            ItemShopUtils.buyItem(game, player, currentItem, resname, ba);
+        } else {
+            ItemShopUtils.buyItem(game, player, currentItem, resname, 1);
         }
     }
 }
