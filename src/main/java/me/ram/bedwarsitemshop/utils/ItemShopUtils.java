@@ -22,6 +22,10 @@ import java.util.Map;
 
 public class ItemShopUtils {
 
+    public static boolean isXpMode(Game game) {
+        return ldcr.BedwarsXP.Config.isGameEnabledXP(game.getName());
+    }
+
     public static boolean isResources(String line) {
         String[] args = line.split(" ");
         return args.length > 1 && ColorUtil.removeColor(args[0].replaceAll("\\d+", "")).isEmpty() && getResourceNameList().contains(line.substring(args[0].length() + 1));
