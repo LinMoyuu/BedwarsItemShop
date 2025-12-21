@@ -1,10 +1,11 @@
 package me.ram.bedwarsitemshop.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import io.github.bedwarsrel.BedwarsRel;
+import io.github.bedwarsrel.game.Game;
+import io.github.bedwarsrel.utils.SoundMachine;
+import ldcr.BedwarsXP.api.XPManager;
+import me.ram.bedwarsitemshop.Main;
+import me.ram.bedwarsitemshop.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,12 +15,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.github.bedwarsrel.BedwarsRel;
-import io.github.bedwarsrel.game.Game;
-import io.github.bedwarsrel.utils.SoundMachine;
-import ldcr.BedwarsXP.api.XPManager;
-import me.ram.bedwarsitemshop.Main;
-import me.ram.bedwarsitemshop.config.Config;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemShopUtils {
 
@@ -140,7 +139,7 @@ public class ItemShopUtils {
 					player.sendMessage(Config.message_buy.replace("{item}", name));
 				}
 			} else if (i < 1) {
-				player.sendMessage("§c" + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
+                player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
 			}
 		}
 	}
