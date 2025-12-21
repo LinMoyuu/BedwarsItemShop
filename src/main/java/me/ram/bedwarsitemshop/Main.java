@@ -1,15 +1,14 @@
 package me.ram.bedwarsitemshop;
 
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import lombok.Getter;
 import me.ram.bedwarsitemshop.commands.Commands;
 import me.ram.bedwarsitemshop.config.Config;
 import me.ram.bedwarsitemshop.config.LocaleConfig;
 import me.ram.bedwarsitemshop.listener.EventListener;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 

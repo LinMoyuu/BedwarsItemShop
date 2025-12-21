@@ -19,52 +19,52 @@ import java.util.Map;
 
 public class EventListener implements Listener {
 
-	private final Map<Integer, Shop> shop_type_list;
+    private final Map<Integer, Shop> shop_type_list;
 
-	public EventListener() {
-		shop_type_list = new HashMap<>();
-		shop_type_list.put(1, new NewShop());
-		shop_type_list.put(2, new OldShop());
-		shop_type_list.put(3, new GHDShop());
+    public EventListener() {
+        shop_type_list = new HashMap<>();
+        shop_type_list.put(1, new NewShop());
+        shop_type_list.put(2, new OldShop());
+        shop_type_list.put(3, new GHDShop());
         shop_type_list.put(4, new RelLikeShop());
-	}
+    }
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onOpen(InventoryOpenEvent e) {
-		if (!shop_type_list.containsKey(Config.mode)) {
-			return;
-		}
-		Shop shop = shop_type_list.get(Config.mode);
-		Player player = (Player) e.getPlayer();
-		Inventory inventory = e.getInventory();
-		Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-		if (game == null || !inventory.getTitle().equals(BedwarsRel._l(player, "ingame.shop.name"))) {
-			return;
-		}
-		if (inventory.getSize() >= 54 && inventory.getItem(53) != null) {
-			return;
-		}
-		e.setCancelled(true);
-		shop.onOpen(game, player, inventory);
-	}
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onOpen(InventoryOpenEvent e) {
+        if (!shop_type_list.containsKey(Config.mode)) {
+            return;
+        }
+        Shop shop = shop_type_list.get(Config.mode);
+        Player player = (Player) e.getPlayer();
+        Inventory inventory = e.getInventory();
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (game == null || !inventory.getTitle().equals(BedwarsRel._l(player, "ingame.shop.name"))) {
+            return;
+        }
+        if (inventory.getSize() >= 54 && inventory.getItem(53) != null) {
+            return;
+        }
+        e.setCancelled(true);
+        shop.onOpen(game, player, inventory);
+    }
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onClick(InventoryClickEvent e) {
-		if (!shop_type_list.containsKey(Config.mode)) {
-			return;
-		}
-		Shop shop = shop_type_list.get(Config.mode);
-		Player player = (Player) e.getWhoClicked();
-		Inventory inventory = e.getInventory();
-		Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-		if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR || game == null || !inventory.getTitle().equals(BedwarsRel._l(player, "ingame.shop.name") + "§n§e§w")) {
-			return;
-		}
-		e.setCancelled(true);
-		if (!game.getState().equals(GameState.RUNNING)) {
-			player.closeInventory();
-			return;
-		}
-		shop.onClick(game, e);
-	}
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onClick(InventoryClickEvent e) {
+        if (!shop_type_list.containsKey(Config.mode)) {
+            return;
+        }
+        Shop shop = shop_type_list.get(Config.mode);
+        Player player = (Player) e.getWhoClicked();
+        Inventory inventory = e.getInventory();
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR || game == null || !inventory.getTitle().equals(BedwarsRel._l(player, "ingame.shop.name") + "§n§e§w")) {
+            return;
+        }
+        e.setCancelled(true);
+        if (!game.getState().equals(GameState.RUNNING)) {
+            player.closeInventory();
+            return;
+        }
+        shop.onClick(game, e);
+    }
 }

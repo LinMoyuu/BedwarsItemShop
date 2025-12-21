@@ -1,20 +1,29 @@
 package me.ram.bedwarsitemshop.xpshop;
 
+import io.github.bedwarsrel.BedwarsRel;
+import io.github.bedwarsrel.game.Game;
+import io.github.bedwarsrel.utils.ChatWriter;
+import io.github.bedwarsrel.utils.SoundMachine;
+import io.github.bedwarsrel.utils.Utils;
+import io.github.bedwarsrel.villager.MerchantCategory;
+import io.github.bedwarsrel.villager.VillagerTrade;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.entity.*;
-import io.github.bedwarsrel.game.*;
-import io.github.bedwarsrel.*;
-import org.bukkit.enchantments.*;
-import io.github.bedwarsrel.villager.*;
-import io.github.bedwarsrel.utils.*;
-import org.bukkit.inventory.meta.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.*;
-import org.bukkit.inventory.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 
+import java.lang.reflect.Method;
 import java.util.*;
-import java.lang.reflect.*;
 
 public class ItemShop {
     @Getter
