@@ -4,7 +4,7 @@ version: 2
 #区域语言
 locale: zh_CN
 
-#商店模式 0-3
+#商店模式 0-4
 #0 为原版
 mode: 1
 

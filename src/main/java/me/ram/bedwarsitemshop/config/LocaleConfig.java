@@ -1,5 +1,9 @@
 package me.ram.bedwarsitemshop.config;
 
+import lombok.Getter;
+import me.ram.bedwarsitemshop.Main;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,11 +11,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import lombok.Getter;
-import me.ram.bedwarsitemshop.Main;
 
 public class LocaleConfig {
 
@@ -26,14 +25,6 @@ public class LocaleConfig {
 	private void loadLanguage() {
 		switch (pluginLocale) {
 		case ZH_CN:
-			language.put("version", "版本");
-			language.put("author", "作者");
-			break;
-		case EN_US:
-			language.put("version", "Version");
-			language.put("author", "Author");
-			break;
-		case ZH_TW:
 			language.put("version", "版本");
 			language.put("author", "作者");
 			break;
@@ -72,7 +63,7 @@ public class LocaleConfig {
 
 	private EnumLocale getLocaleByName(String name) {
 		EnumLocale locale = EnumLocale.getByName(name);
-		return locale == null ? EnumLocale.EN_US : locale;
+        return locale == null ? EnumLocale.ZH_CN : locale;
 	}
 
 	public void saveResource(String resourcePath) {
