@@ -1,8 +1,10 @@
 package me.ram.bedwarsitemshop.listener;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import io.github.bedwarsrel.BedwarsRel;
+import io.github.bedwarsrel.game.Game;
+import io.github.bedwarsrel.game.GameState;
+import me.ram.bedwarsitemshop.config.Config;
+import me.ram.bedwarsitemshop.shop.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,14 +14,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
-import io.github.bedwarsrel.BedwarsRel;
-import io.github.bedwarsrel.game.Game;
-import io.github.bedwarsrel.game.GameState;
-import me.ram.bedwarsitemshop.config.Config;
-import me.ram.bedwarsitemshop.shop.GHDShop;
-import me.ram.bedwarsitemshop.shop.NewShop;
-import me.ram.bedwarsitemshop.shop.OldShop;
-import me.ram.bedwarsitemshop.shop.Shop;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EventListener implements Listener {
 
@@ -30,6 +26,7 @@ public class EventListener implements Listener {
 		shop_type_list.put(1, new NewShop());
 		shop_type_list.put(2, new OldShop());
 		shop_type_list.put(3, new GHDShop());
+        shop_type_list.put(4, new RelLikeShop());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
