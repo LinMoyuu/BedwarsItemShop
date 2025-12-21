@@ -2,15 +2,22 @@ package me.ram.bedwarsitemshop.shop;
 
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
+import io.github.bedwarsrel.villager.MerchantCategory;
+import ldcr.BedwarsXP.BedwarsXP;
 import me.ram.bedwarsitemshop.utils.ItemShopUtils;
 import me.ram.bedwarsitemshop.xpshop.ItemShop;
 import me.ram.bedwarsitemshop.xpshop.XPItemShop;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -51,12 +58,37 @@ public class RelLikeShop implements Shop {
             inventory.setItem(slot, shopItem);
             slot++;
         }
+        
+        if (ItemShopUtils.isXpMode(game) && shop_items.isEmpty()) {
+            ItemStack stack;
+            if (game.getPlayerSettings(player).oneStackPerShift()) {
+                stack = new ItemStack(Material.BUCKET, 1);
+                ItemMeta meta = stack.getItemMeta();
+
+                meta.setDisplayName(
+                        ChatColor.AQUA + BedwarsRel._l(player, "default.currently") + ": " + ChatColor.WHITE
+                                + BedwarsRel._l(player, "ingame.shop.onestackpershift"));
+                meta.setLore(new ArrayList<>());
+                stack.setItemMeta(meta);
+            } else {
+                stack = new ItemStack(Material.LAVA_BUCKET, 1);
+                ItemMeta meta = stack.getItemMeta();
+
+                meta.setDisplayName(
+                        ChatColor.AQUA + BedwarsRel._l(player, "default.currently") + ": " + ChatColor.WHITE
+                                + BedwarsRel._l(player, "ingame.shop.fullstackpershift"));
+                meta.setLore(new ArrayList<>());
+                stack.setItemMeta(meta);
+            }
+            inventory.setItem(inventory.getSize() - 4, stack);
+        }
 
         player.openInventory(inventory);
     }
 
     public void onClick(Game game, InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
+
         if (ItemShopUtils.getBackItem().isSimilar(e.getCurrentItem())) {
             game.getNewItemShop(player).openCategoryInventory(player);
             return;
