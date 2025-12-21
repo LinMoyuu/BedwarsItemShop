@@ -40,7 +40,7 @@ public class UpgradeUtils {
         }
 
         // 如果没有匹配的材质，直接返回
-        if (leggings == null || boots == null || newMaterialLevel == null) {
+        if (leggings == null) {
             return false;
         }
 
@@ -63,6 +63,13 @@ public class UpgradeUtils {
             return false;
         }
 
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (game == null) return false;
+        Team playerTeam = game.getPlayerTeam(player);
+        if (playerTeam == null) return false;
+        Arena arena = Main.getInstance().getArenaManager().getArena(game.getName());
+        if (arena == null) return false;
+
         // 只升级那些需要升级的装备
         ItemMeta leggingsMeta = leggings.getItemMeta();
         if (leggingsMeta != null) {
@@ -77,6 +84,18 @@ public class UpgradeUtils {
             boots.setItemMeta(bootsMeta);
         }
         inventory.setBoots(boots);
+
+        int teamLeggingsLvl = arena.getTeamShop().getTeamLeggingsProtectionLevel().getOrDefault(playerTeam, 0);
+        if (teamLeggingsLvl != 0) {
+            Utils.giveLeggingsProtection(player, teamLeggingsLvl);
+        }
+
+        int teamBootsLvl = arena.getTeamShop().getTeamBootsProtectionLevel().getOrDefault(playerTeam, 0);
+        if (teamBootsLvl != 0) {
+            Utils.giveBootsProtection(player, teamBootsLvl);
+        }
+
+        player.updateInventory();
         return true;
     }
 
@@ -121,6 +140,19 @@ public class UpgradeUtils {
                 player.getWorld().dropItemNaturally(player.getLocation(), oldSword);
             }
         }
+
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (game == null) return;
+        Team playerTeam = game.getPlayerTeam(player);
+        if (playerTeam == null) return;
+        Arena arena = Main.getInstance().getArenaManager().getArena(game.getName());
+        if (arena == null) return;
+        int teamSharpnessLvl = arena.getTeamShop().getTeamSharpnessLevel().getOrDefault(playerTeam, 0);
+        if (teamSharpnessLvl != 0) {
+            Utils.givePlayerSharpness(player, teamSharpnessLvl);
+        }
+
+        player.updateInventory();
     }
 
     // 垃圾使山，懒得改了;w;

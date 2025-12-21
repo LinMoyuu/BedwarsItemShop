@@ -1,7 +1,9 @@
 name: BedwarsItemShop
 version: '${project.version}'
 main: me.ram.bedwarsitemshop.Main
-author: TheRamU
+authors:
+  - Ram
+  - YukiEnd
 depends: [ BedwarsRel ]
 softdepends: [ BedwarsXP ]
 

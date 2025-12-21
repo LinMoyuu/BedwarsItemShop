@@ -17,16 +17,9 @@ public class Main extends JavaPlugin {
     @Getter
     private LocaleConfig localeConfig;
 
-    public String getVersion() {
-        return "1.1";
-    }
-
     public void onEnable() {
-        if (!getDescription().getName().equals("BedwarsItemShop") || !getDescription().getVersion().equals(getVersion()) || !getDescription().getAuthors().contains("TheRamU")) {
-            try {
-                new Exception("Please don't edit plugin.yml!").printStackTrace();
-            } catch (Exception e) {
-            }
+        if (!getDescription().getName().equals("BedwarsItemShop") || !getDescription().getAuthors().contains("Ram") || !getDescription().getAuthors().contains("YukiEnd")) {
+            new Exception("Please don't edit plugin.yml!").printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -37,9 +30,9 @@ public class Main extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§7");
         Bukkit.getConsoleSender().sendMessage("             §bBedwarsItemShop");
         Bukkit.getConsoleSender().sendMessage("§7");
-        Bukkit.getConsoleSender().sendMessage(" §a" + localeConfig.getLanguage("version") + ": " + getVersion());
+        Bukkit.getConsoleSender().sendMessage(" §a" + localeConfig.getLanguage("version") + ": §a" + getDescription().getVersion());
         Bukkit.getConsoleSender().sendMessage("§7");
-        Bukkit.getConsoleSender().sendMessage(" §a" + localeConfig.getLanguage("author") + ": Ram");
+        Bukkit.getConsoleSender().sendMessage(" §a" + localeConfig.getLanguage("author") + ": §aRam" + ", §eModified By YukiEnd");
         Bukkit.getConsoleSender().sendMessage("§7");
         Bukkit.getConsoleSender().sendMessage("§f=========================================");
         Config.loadConfig();
