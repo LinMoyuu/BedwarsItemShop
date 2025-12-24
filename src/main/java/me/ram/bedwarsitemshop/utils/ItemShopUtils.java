@@ -122,7 +122,7 @@ public class ItemShopUtils {
             }
             if (UpgradeUtils.isEnhancedItem(item)) {
                 if (!UpgradeUtils.upgradeTeamEnhanced(player, itemStack)) {
-                    player.sendMessage("已拥有套装或拥有更高级套装");
+                    player.sendMessage("您已经购买过该物品了");
                     return;
                 }
             }
