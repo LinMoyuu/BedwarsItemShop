@@ -57,7 +57,7 @@ public class EventListener implements Listener {
         Player player = (Player) e.getWhoClicked();
         Inventory inventory = e.getInventory();
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR || game == null || !inventory.getTitle().equals(BedwarsRel._l(player, "ingame.shop.name") + "§n§e§w")) {
+        if (e.getClickedInventory() == player.getInventory() || e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR || game == null || !inventory.getTitle().equals(BedwarsRel._l(player, "ingame.shop.name") + "§n§e§w")) {
             return;
         }
         e.setCancelled(true);
