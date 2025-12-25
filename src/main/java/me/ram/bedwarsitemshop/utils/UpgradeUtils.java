@@ -6,6 +6,7 @@ import io.github.bedwarsrel.game.Team;
 import me.ram.bedwarsscoreboardaddon.Main;
 import me.ram.bedwarsscoreboardaddon.addon.teamshop.TeamShop;
 import me.ram.bedwarsscoreboardaddon.arena.Arena;
+import me.ram.bedwarsscoreboardaddon.utils.ItemUtil;
 import me.ram.bedwarsscoreboardaddon.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -87,12 +88,12 @@ public class UpgradeUtils {
 
         int teamLeggingsLvl = arena.getTeamShop().getTeamLeggingsProtectionLevel().getOrDefault(playerTeam, 0);
         if (teamLeggingsLvl != 0) {
-            Utils.giveLeggingsProtection(player, teamLeggingsLvl);
+            ItemUtil.giveLeggingsProtection(player, teamLeggingsLvl);
         }
 
         int teamBootsLvl = arena.getTeamShop().getTeamBootsProtectionLevel().getOrDefault(playerTeam, 0);
         if (teamBootsLvl != 0) {
-            Utils.giveBootsProtection(player, teamBootsLvl);
+            ItemUtil.giveBootsProtection(player, teamBootsLvl);
         }
 
         player.updateInventory();
@@ -149,7 +150,7 @@ public class UpgradeUtils {
         if (arena == null) return;
         int teamSharpnessLvl = arena.getTeamShop().getTeamSharpnessLevel().getOrDefault(playerTeam, 0);
         if (teamSharpnessLvl != 0) {
-            Utils.givePlayerSharpness(player, teamSharpnessLvl);
+            ItemUtil.givePlayerSharpness(player, teamSharpnessLvl);
         }
 
         player.updateInventory();
@@ -180,7 +181,7 @@ public class UpgradeUtils {
                 }
                 teamShop.getTeamSharpnessLevel().put(playerTeam, 2);
                 for (Player teamPlayer : playerTeam.getPlayers()) {
-                    Utils.givePlayerSharpness(teamPlayer, 2);
+                    ItemUtil.givePlayerSharpness(teamPlayer, 2);
                 }
                 return true;
 
@@ -191,7 +192,7 @@ public class UpgradeUtils {
                 }
                 teamShop.getTeamSharpnessLevel().put(playerTeam, 1);
                 for (Player teamPlayer : playerTeam.getPlayers()) {
-                    Utils.givePlayerSharpness(teamPlayer, 1);
+                    ItemUtil.givePlayerSharpness(teamPlayer, 1);
                 }
                 return true;
 
@@ -202,7 +203,7 @@ public class UpgradeUtils {
                 }
                 teamShop.getTeamLeggingsProtectionLevel().put(playerTeam, 2);
                 for (Player teamPlayer : playerTeam.getPlayers()) {
-                    Utils.giveLeggingsProtection(teamPlayer, 2);
+                    ItemUtil.giveLeggingsProtection(teamPlayer, 2);
                 }
                 return true;
 
@@ -213,7 +214,7 @@ public class UpgradeUtils {
                 }
                 teamShop.getTeamLeggingsProtectionLevel().put(playerTeam, 1);
                 for (Player teamPlayer : playerTeam.getPlayers()) {
-                    Utils.giveLeggingsProtection(teamPlayer, 1);
+                    ItemUtil.giveLeggingsProtection(teamPlayer, 1);
                 }
                 return true;
 
@@ -224,7 +225,7 @@ public class UpgradeUtils {
                 }
                 teamShop.getTeamBootsProtectionLevel().put(playerTeam, 2);
                 for (Player teamPlayer : playerTeam.getPlayers()) {
-                    Utils.giveBootsProtection(teamPlayer, 2);
+                    ItemUtil.giveBootsProtection(teamPlayer, 2);
                 }
                 return true;
 
@@ -235,7 +236,7 @@ public class UpgradeUtils {
                 }
                 teamShop.getTeamBootsProtectionLevel().put(playerTeam, 1);
                 for (Player teamPlayer : playerTeam.getPlayers()) {
-                    Utils.giveBootsProtection(teamPlayer, 1);
+                    ItemUtil.giveBootsProtection(teamPlayer, 1);
                 }
                 return true;
         }

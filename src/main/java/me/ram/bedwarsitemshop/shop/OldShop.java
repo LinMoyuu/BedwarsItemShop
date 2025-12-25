@@ -6,6 +6,7 @@ import me.ram.bedwarsitemshop.utils.ItemShopUtils;
 import me.ram.bedwarsitemshop.utils.UpgradeUtils;
 import me.ram.bedwarsitemshop.xpshop.ItemShop;
 import me.ram.bedwarsitemshop.xpshop.XPItemShop;
+import me.ram.bedwarsscoreboardaddon.utils.BedwarsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -14,8 +15,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Map;
-
-import static me.ram.bedwarsscoreboardaddon.utils.Utils.isXpMode;
 
 public class OldShop implements Shop {
 
@@ -89,7 +88,7 @@ public class OldShop implements Shop {
         Map<String, ItemStack> resname = ItemShopUtils.getResourceList();
         ItemStack currentItem = e.getCurrentItem();
         if (!ItemShopUtils.isShopItem(e.getCurrentItem())) {
-            if (isXpMode(game)) {
+            if (BedwarsUtil.isXpMode(game)) {
                 new XPItemShop(game.getNewItemShop(player).getCategories(), game).handleInventoryClick(e, game, player);
             } else {
                 new ItemShop(game.getNewItemShop(player).getCategories()).handleInventoryClick(e, game, player);
@@ -97,7 +96,7 @@ public class OldShop implements Shop {
             return;
         }
 
-        if (UpgradeUtils.isUpgradeItem(currentItem) && !isXpMode(game)) {
+        if (UpgradeUtils.isUpgradeItem(currentItem) && !BedwarsUtil.isXpMode(game)) {
             ItemShopUtils.buyUpgrade(game, player, currentItem, resname);
             return;
         }
