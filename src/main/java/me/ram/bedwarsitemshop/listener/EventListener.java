@@ -1,16 +1,19 @@
 package me.ram.bedwarsitemshop.listener;
 
 import io.github.bedwarsrel.BedwarsRel;
+import io.github.bedwarsrel.events.BedwarsPlayerLeaveEvent;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
 import me.ram.bedwarsitemshop.config.Config;
 import me.ram.bedwarsitemshop.shop.*;
+import me.ram.bedwarsitemshop.xpshop.ItemShop;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
@@ -66,5 +69,22 @@ public class EventListener implements Listener {
             return;
         }
         shop.onClick(game, e);
+    }
+
+    @EventHandler
+    public void onPlayerLeave(BedwarsPlayerLeaveEvent e) {
+        Player player = e.getPlayer();
+        ItemShop.playerOpenedCategory.remove(player);
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        Player player = (Player) e.getPlayer();
+        Inventory inventory = e.getInventory();
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (game == null || !inventory.getTitle().equals(BedwarsRel._l(player, "ingame.shop.name"))) {
+            return;
+        }
+        ItemShop.playerOpenedCategory.remove(player);
     }
 }

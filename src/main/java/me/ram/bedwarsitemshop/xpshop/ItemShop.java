@@ -31,6 +31,8 @@ public class ItemShop {
     @Setter
     private MerchantCategory currentCategory;
 
+    public static HashMap<Player, MerchantCategory> playerOpenedCategory = new HashMap<>();
+
     public ItemShop(List<MerchantCategory> categories) {
         this.currentCategory = null;
         this.categories = categories;
@@ -287,6 +289,12 @@ public class ItemShop {
         }
         MerchantCategory clickedCategory = this.getCategoryByMaterial(ice.getCurrentItem().getType());
         if (clickedCategory != null) {
+            if (playerOpenedCategory.getOrDefault(player, null) == clickedCategory) {
+                playerOpenedCategory.put(player, null);
+                this.openCategoryInventory(player);
+                return;
+            }
+            playerOpenedCategory.put(player, clickedCategory);
             this.openBuyInventory(clickedCategory, player, game);
             player.playSound(player.getLocation(), SoundMachine.get("CLICK", "UI_BUTTON_CLICK"), Float.parseFloat("1.0"), Float.parseFloat("1.0"));
             return;
