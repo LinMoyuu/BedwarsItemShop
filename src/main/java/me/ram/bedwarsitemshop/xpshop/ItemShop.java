@@ -26,12 +26,11 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class ItemShop {
+    public static HashMap<Player, MerchantCategory> playerOpenedCategory = new HashMap<>();
     @Getter
     private final List<MerchantCategory> categories;
     @Setter
     private MerchantCategory currentCategory;
-
-    public static HashMap<Player, MerchantCategory> playerOpenedCategory = new HashMap<>();
 
     public ItemShop(List<MerchantCategory> categories) {
         this.currentCategory = null;
