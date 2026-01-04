@@ -27,6 +27,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static me.ram.bedwarsitemshop.xpshop.ItemShop.playerOpenedCategory;
+
 public class XPItemShop extends NewItemShop {
     private final Game bedwars;
     @Getter
@@ -141,6 +143,12 @@ public class XPItemShop extends NewItemShop {
         }
         MerchantCategory clickedCategory = this.getCategoryByMaterial(ice.getCurrentItem().getType());
         if (clickedCategory != null) {
+            if (playerOpenedCategory.getOrDefault(player, null) == clickedCategory) {
+                playerOpenedCategory.put(player, null);
+                this.openCategoryInventory(player);
+                return;
+            }
+            playerOpenedCategory.put(player, clickedCategory);
             this.openBuyInventory(clickedCategory, player, game);
             player.playSound(player.getLocation(), SoundMachine.get("CLICK", "UI_BUTTON_CLICK"), 10.0f, 1.0f);
             return;
