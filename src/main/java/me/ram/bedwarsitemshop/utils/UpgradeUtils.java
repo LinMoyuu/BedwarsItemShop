@@ -102,6 +102,12 @@ public class UpgradeUtils {
     public static void upgradeSword(Player player, ItemStack itemStack) {
         PlayerInventory inventory = player.getInventory();
         ItemStack newSword = itemStack.clone();
+        // 清空剑的Lore
+        if (newSword.hasItemMeta()) {
+            ItemMeta meta = newSword.getItemMeta();
+            meta.setLore(null);
+            newSword.setItemMeta(meta);
+        }
 
         // 在购买剑后 花雨庭会将之前的剑放进背包内
         // 没能想出什么方法 也没见过背包满的花雨庭怎么处理的 就这么生草了
