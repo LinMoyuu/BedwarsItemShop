@@ -109,78 +109,106 @@ public class ItemShopUtils {
     }
 
     public static void buyUpgrade(Game game, Player player, ItemStack itemStack, Map<String, ItemStack> resname) {
-        String lore = itemStack.getItemMeta().getLore().get(itemStack.getItemMeta().getLore().size() - 1);
+        if (game == null || player == null || itemStack == null || resname == null) {
+            return;
+        }
+
+        List<String> loreList = itemStack.getItemMeta().getLore();
+        if (loreList == null || loreList.isEmpty()) {
+            return;
+        }
+
+        String lore = loreList.get(loreList.size() - 1);
         String lore_2 = null;
-        if (isResources(itemStack, 2)) {
-            lore_2 = itemStack.getItemMeta().getLore().get(itemStack.getItemMeta().getLore().size() - 2);
+        if (loreList.size() >= 2 && isResources(itemStack, 2)) {
+            lore_2 = loreList.get(loreList.size() - 2);
         }
-        if ((lore_2 == null || isEnough(game, player, lore_2, resname)) && isEnough(game, player, lore, resname)) {
-            ItemStack item = itemStack.clone();
-            if (ItemUtils.isArmor(item)) {
-                if (!UpgradeUtils.upgradeArmor(player, itemStack)) {
-                    player.sendMessage("已拥有套装或拥有更高级套装");
-                    return;
-                }
-            }
-            if (ItemUtils.isSword(item)) {
-                UpgradeUtils.upgradeSword(player, itemStack);
-            }
-            if (ItemUtils.isEnhancedItem(item)) {
-                if (!UpgradeUtils.upgradeTeamEnhanced(player, itemStack)) {
-                    player.sendMessage("您已经购买过该物品了");
-                    return;
-                }
-            }
-            takeItem(game, player, lore, resname);
-            if (lore_2 != null) {
-                takeItem(game, player, lore_2, resname);
-            }
-            TeamUpgrades teamUpgrades = Main.getInstance().getGameUpgradesManager().getArena(game.getName());
-            if (teamUpgrades == null) return;
-            teamUpgrades.givePlayerTeamUpgrade(player);
-        } else {
+
+        boolean hasEnoughResources = isEnough(game, player, lore, resname);
+        boolean hasEnoughResources2 = (lore_2 == null) || isEnough(game, player, lore_2, resname);
+
+        if (!hasEnoughResources || !hasEnoughResources2) {
             player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
+            player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), 1.0f, 1.0f);
+            return;
         }
-        player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), Float.parseFloat("1.0"), Float.parseFloat("1.0"));
+
+        TeamUpgrades teamUpgrades = Main.getInstance().getGameUpgradesManager().getArena(game.getName());
+        if (teamUpgrades == null) {
+            return;
+        }
+
+        ItemStack item = itemStack.clone();
+        if (ItemUtils.isArmor(item)) {
+            if (!UpgradeUtils.upgradeArmor(player, itemStack)) {
+                player.sendMessage("已拥有套装或拥有更高级套装");
+                return;
+            }
+        }
+        if (ItemUtils.isSword(item)) {
+            UpgradeUtils.upgradeSword(player, itemStack);
+        }
+        if (ItemUtils.isEnhancedItem(item)) {
+            if (!teamUpgrades.upgradeTeamEnhanced(player, itemStack)) {
+                player.sendMessage("您已经购买过该物品了");
+                return;
+            }
+        }
+
+        takeItem(game, player, lore, resname);
+        if (lore_2 != null) {
+            takeItem(game, player, lore_2, resname);
+        }
+        teamUpgrades.givePlayerTeamUpgrade(player);
+        player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), 1.0f, 1.0f);
     }
 
     public static void buyItem(Game game, Player player, ItemStack itemStack, Map<String, ItemStack> resname, int a) {
-        String lore = itemStack.getItemMeta().getLore().get(itemStack.getItemMeta().getLore().size() - 1);
-        String lore_2 = null;
-        if (isResources(itemStack, 2)) {
-            lore_2 = itemStack.getItemMeta().getLore().get(itemStack.getItemMeta().getLore().size() - 2);
+        if (game == null || player == null || itemStack == null || resname == null) {
+            return;
         }
+
+        List<String> loreList = itemStack.getItemMeta().getLore();
+        if (loreList == null || loreList.isEmpty()) {
+            return;
+        }
+
+        String lore = loreList.get(loreList.size() - 1);
+        String lore_2 = null;
+        if (loreList.size() >= 2 && isResources(itemStack, 2)) {
+            lore_2 = loreList.get(loreList.size() - 2);
+        }
+
         for (int i = 0; i < a; i++) {
-            if ((lore_2 == null || isEnough(game, player, lore_2, resname)) && isEnough(game, player, lore, resname)) {
+            boolean hasEnoughResources = isEnough(game, player, lore, resname);
+            boolean hasEnoughResources2 = (lore_2 == null) || isEnough(game, player, lore_2, resname);
+
+            if (hasEnoughResources && hasEnoughResources2) {
                 takeItem(game, player, lore, resname);
                 if (lore_2 != null) {
                     takeItem(game, player, lore_2, resname);
                 }
+
                 ItemStack item = itemStack.clone();
-                List<String> lores = item.getItemMeta().getLore();
-                lores.remove(lores.size() - 1);
+                List<String> lores = new ArrayList<>(item.getItemMeta().getLore());
+                if (!lores.isEmpty()) {
+                    lores.remove(lores.size() - 1);
+                }
                 ItemMeta meta = item.getItemMeta();
                 meta.setLore(lores);
                 item.setItemMeta(meta);
                 player.getInventory().addItem(item);
-                if (i < 1 && !Config.message_buy.isEmpty()) {
-                    String name;
-                    if (item.getItemMeta().getDisplayName() == null) {
-                        if (Main.getInstance().getLocaleConfig().getPluginLocale().name().startsWith("ZH_")) {
-                            name = ItemUtils.getRealName(item);
-                        } else {
-                            name = item.getType().name().replace("_", " ");
-                        }
-                    } else {
-                        name = item.getItemMeta().getDisplayName();
-                    }
+
+                if (i == 0 && !Config.message_buy.isEmpty()) {
+                    String name = getItemDisplayName(item);
                     player.sendMessage(Config.message_buy.replace("{item}", name));
                 }
-            } else if (i < 1) {
+            } else if (i == 0) {
                 player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
+                break;
             }
         }
-        player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), Float.parseFloat("1.0"), Float.parseFloat("1.0"));
+        player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), 1.0f, 1.0f);
     }
 
     public static boolean isEnough(Game game, Player player, String line, Map<String, ItemStack> resname) {
@@ -230,6 +258,17 @@ public class ItemShopUtils {
                     }
                 }
             }
+        }
+    }
+
+    private static String getItemDisplayName(ItemStack item) {
+        if (item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null) {
+            return item.getItemMeta().getDisplayName();
+        }
+        if (Main.getInstance().getLocaleConfig().getPluginLocale().name().startsWith("ZH_")) {
+            return ItemUtils.getRealName(item);
+        } else {
+            return item.getType().name().replace("_", " ");
         }
     }
 

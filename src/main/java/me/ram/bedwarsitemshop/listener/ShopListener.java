@@ -15,7 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
@@ -73,17 +72,10 @@ public class ShopListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent e) {
-        Player player = e.getPlayer();
-        ItemShop.playerOpenedCategory.remove(player);
-    }
-
-    @EventHandler
     public void onPlayerLeave(BedwarsPlayerLeaveEvent e) {
         Player player = e.getPlayer();
         ItemShop.playerOpenedCategory.remove(player);
     }
-
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
