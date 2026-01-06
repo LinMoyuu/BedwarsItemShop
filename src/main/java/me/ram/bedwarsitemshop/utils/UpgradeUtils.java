@@ -6,6 +6,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
+
 public class UpgradeUtils {
 
     public static boolean upgradeArmor(Player player, ItemStack itemStack) {
@@ -77,11 +79,15 @@ public class UpgradeUtils {
     public static boolean upgradeSword(Player player, ItemStack itemStack) {
         PlayerInventory inventory = player.getInventory();
         ItemStack newSword = itemStack.clone();
-        // 清空剑的Lore
+
         if (newSword.hasItemMeta()) {
             ItemMeta meta = newSword.getItemMeta();
-            meta.setLore(null);
-            newSword.setItemMeta(meta);
+            List<String> lore = meta.getLore();
+            if (lore != null && !lore.isEmpty()) {
+                lore.remove(lore.size() - 1);
+                meta.setLore(lore);
+                newSword.setItemMeta(meta);
+            }
         }
 
         // 在购买剑后 花雨庭会将之前的剑放进背包内
@@ -108,15 +114,13 @@ public class UpgradeUtils {
         // 将旧剑移动到背包
         if (oldSword != null) {
             boolean placedInInventory = false;
-            // 遍历主背包区域寻找空位
             for (int j = 9; j <= 35; j++) {
                 if (inventory.getItem(j) == null || inventory.getItem(j).getType() == Material.AIR) {
-                    inventory.setItem(j, oldSword); // 放入空位
+                    inventory.setItem(j, oldSword);
                     placedInInventory = true;
                     break;
                 }
             }
-            // 如果背包满了 旧剑直接掉落
             if (!placedInInventory) {
                 player.getWorld().dropItemNaturally(player.getLocation(), oldSword);
             }
