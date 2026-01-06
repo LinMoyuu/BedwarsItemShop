@@ -24,7 +24,7 @@ public class GameListener implements Listener {
         if (Main.getInstance().getGameUpgradesManager().getArenas().containsKey(gameName)) {
             Main.getInstance().getGameUpgradesManager().getArenas().get(gameName).onEnd();
         }
-        Main.getInstance().getGameUpgradesManager().getArenas().remove(gameName);
+        Main.getInstance().getGameUpgradesManager().removeArena(gameName);
     }
 
 }
