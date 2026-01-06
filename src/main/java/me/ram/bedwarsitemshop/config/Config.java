@@ -16,6 +16,8 @@ public class Config {
     public static List<String> item_frame;
     public static List<String> item_back;
     private static FileConfiguration language_config;
+    public static boolean isBedwarsScoreBoardAddonEnabled = false;
+    public static boolean isBedwarsXPEnabled = false;
 
     public static void loadConfig() {
         File folder = new File(Main.getInstance().getDataFolder(), "/");
@@ -29,6 +31,8 @@ public class Config {
         message_buy = ColorUtil.color(config.getString("message.buy"));
         item_frame = ColorUtil.colorList(config.getStringList("item.frame"));
         item_back = ColorUtil.colorList(config.getStringList("item.back"));
+        isBedwarsScoreBoardAddonEnabled = Main.getInstance().getServer().getPluginManager().isPluginEnabled("BedwarsScoreBoardAddon");
+        isBedwarsXPEnabled = Main.getInstance().getServer().getPluginManager().isPluginEnabled("BedwarsXP");
     }
 
     private static FileConfiguration getVerifiedConfig(String fileName) {

@@ -4,8 +4,8 @@ main: me.ram.bedwarsitemshop.Main
 authors:
   - Ram
   - YukiEnd
-depends: [ BedwarsRel ]
-softdepends: [ BedwarsXP ]
+depend: [ BedwarsRel ]
+softdepend: [ BedwarsXP, BedwarsScoreBoardAddon ]
 
 commands:
   bedwarsitemshop:

@@ -15,16 +15,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventListener implements Listener {
+public class ShopListener implements Listener {
 
     private final Map<Integer, Shop> shop_type_list;
 
-    public EventListener() {
+    public ShopListener() {
         shop_type_list = new HashMap<>();
         shop_type_list.put(1, new NewShop());
         shop_type_list.put(2, new OldShop());
@@ -72,10 +73,17 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent e) {
+        Player player = e.getPlayer();
+        ItemShop.playerOpenedCategory.remove(player);
+    }
+
+    @EventHandler
     public void onPlayerLeave(BedwarsPlayerLeaveEvent e) {
         Player player = e.getPlayer();
         ItemShop.playerOpenedCategory.remove(player);
     }
+
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {

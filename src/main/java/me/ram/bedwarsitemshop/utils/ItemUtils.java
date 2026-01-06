@@ -1,11 +1,16 @@
 package me.ram.bedwarsitemshop.utils;
 
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemUtil {
+public class ItemUtils {
 
     public static Map<Integer, String> getItemNameMap() {
         Map<Integer, String> m = new HashMap<>();
@@ -385,5 +390,73 @@ public class ItemUtil {
 
     public static String getRealName(ItemStack target) {
         return getItemNameMap().get(target.getTypeId());
+    }
+
+    public static void giveLeggingsProtection(Player player, int level) {
+        PlayerInventory playerInventory = player.getInventory();
+        ItemStack leggings = playerInventory.getLeggings();
+        if (leggings == null) return;
+        leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, level);
+        ItemMeta leggingsMeta = leggings.getItemMeta();
+        leggingsMeta.spigot().setUnbreakable(true);
+        playerInventory.setLeggings(leggings);
+        player.updateInventory();
+    }
+
+    public static void giveBootsProtection(Player player, int level) {
+        PlayerInventory playerInventory = player.getInventory();
+        ItemStack boots = playerInventory.getBoots();
+        if (boots == null) return;
+        boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, level);
+        ItemMeta bootsMeta = boots.getItemMeta();
+        bootsMeta.spigot().setUnbreakable(true);
+        playerInventory.setBoots(boots);
+        player.updateInventory();
+    }
+
+    public static void givePlayerSharpness(Player player, int level) {
+        PlayerInventory playerInventory = player.getInventory();
+        for (int i = 0; i < playerInventory.getSize(); i++) {
+            ItemStack stack = playerInventory.getItem(i);
+            if (!isSword(stack)) continue;
+            if (stack.getEnchantmentLevel(Enchantment.DAMAGE_ALL) > level) continue;
+            stack.addEnchantment(Enchantment.DAMAGE_ALL, level);
+        }
+        player.updateInventory();
+    }
+
+    public static boolean isSword(ItemStack item) {
+        if (item == null) return false;
+
+        Material type = item.getType();
+        return type.toString().endsWith("_SWORD");
+    }
+
+    public static boolean isArmor(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        String typeName = itemStack.getType().name();
+        return typeName.endsWith("_HELMET")
+                || typeName.endsWith("_CHESTPLATE")
+                || typeName.endsWith("_LEGGINGS")
+                || typeName.endsWith("_BOOTS");
+    }
+
+
+    public static boolean isUpgradeItem(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        return ItemUtils.isArmor(itemStack) || ItemUtils.isSword(itemStack) || isEnhancedItem(itemStack);
+    }
+
+    public static boolean isEnhancedItem(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        String displayName = "";
+        if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
+            displayName = itemStack.getItemMeta().getDisplayName();
+        }
+        // 然并卵?
+        if (displayName.contains("I") || displayName.contains("II") || displayName.contains("III")) {
+            return true;
+        }
+        return displayName.contains("附魔") || displayName.contains("锋利") || displayName.contains("保护");
     }
 }
