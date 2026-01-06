@@ -6,6 +6,7 @@ import io.github.bedwarsrel.utils.SoundMachine;
 import ldcr.BedwarsXP.api.XPManager;
 import me.ram.bedwarsitemshop.Main;
 import me.ram.bedwarsitemshop.config.Config;
+import me.ram.bedwarsitemshop.upgrades.TeamUpgrades;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ItemShopUtils {
+
+    public static boolean isXpMode(Game game) {
+        return Config.isBedwarsXPEnabled && ldcr.BedwarsXP.Config.isGameEnabledXP(game.getName());
+    }
 
     public static boolean isResources(String line) {
         String[] args = line.split(" ");
@@ -111,16 +116,16 @@ public class ItemShopUtils {
         }
         if ((lore_2 == null || isEnough(game, player, lore_2, resname)) && isEnough(game, player, lore, resname)) {
             ItemStack item = itemStack.clone();
-            if (UpgradeUtils.isArmor(item)) {
+            if (ItemUtils.isArmor(item)) {
                 if (!UpgradeUtils.upgradeArmor(player, itemStack)) {
                     player.sendMessage("已拥有套装或拥有更高级套装");
                     return;
                 }
             }
-            if (UpgradeUtils.isSword(item)) {
+            if (ItemUtils.isSword(item)) {
                 UpgradeUtils.upgradeSword(player, itemStack);
             }
-            if (UpgradeUtils.isEnhancedItem(item)) {
+            if (ItemUtils.isEnhancedItem(item)) {
                 if (!UpgradeUtils.upgradeTeamEnhanced(player, itemStack)) {
                     player.sendMessage("您已经购买过该物品了");
                     return;
@@ -130,6 +135,9 @@ public class ItemShopUtils {
             if (lore_2 != null) {
                 takeItem(game, player, lore_2, resname);
             }
+            TeamUpgrades teamUpgrades = Main.getInstance().getGameUpgradesManager().getArena(game.getName());
+            if (teamUpgrades == null) return;
+            teamUpgrades.givePlayerTeamUpgrade(player);
         } else {
             player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
         }
@@ -159,7 +167,7 @@ public class ItemShopUtils {
                     String name;
                     if (item.getItemMeta().getDisplayName() == null) {
                         if (Main.getInstance().getLocaleConfig().getPluginLocale().name().startsWith("ZH_")) {
-                            name = ItemUtil.getRealName(item);
+                            name = ItemUtils.getRealName(item);
                         } else {
                             name = item.getType().name().replace("_", " ");
                         }

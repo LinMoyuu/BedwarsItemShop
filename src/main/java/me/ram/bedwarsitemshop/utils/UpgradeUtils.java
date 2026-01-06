@@ -3,10 +3,8 @@ package me.ram.bedwarsitemshop.utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
-import me.ram.bedwarsscoreboardaddon.Main;
-import me.ram.bedwarsscoreboardaddon.addon.teamshop.TeamShop;
-import me.ram.bedwarsscoreboardaddon.arena.Arena;
-import me.ram.bedwarsscoreboardaddon.utils.ItemUtil;
+import me.ram.bedwarsitemshop.Main;
+import me.ram.bedwarsitemshop.upgrades.TeamUpgrades;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -67,8 +65,6 @@ public class UpgradeUtils {
         if (game == null) return false;
         Team playerTeam = game.getPlayerTeam(player);
         if (playerTeam == null) return false;
-        Arena arena = Main.getInstance().getArenaManager().getArena(game.getName());
-        if (arena == null) return false;
 
         // 只升级那些需要升级的装备
         ItemMeta leggingsMeta = leggings.getItemMeta();
@@ -85,21 +81,11 @@ public class UpgradeUtils {
         }
         inventory.setBoots(boots);
 
-        int teamLeggingsLvl = arena.getTeamShop().getTeamLeggingsProtectionLevel().getOrDefault(playerTeam, 0);
-        if (teamLeggingsLvl != 0) {
-            ItemUtil.giveLeggingsProtection(player, teamLeggingsLvl);
-        }
-
-        int teamBootsLvl = arena.getTeamShop().getTeamBootsProtectionLevel().getOrDefault(playerTeam, 0);
-        if (teamBootsLvl != 0) {
-            ItemUtil.giveBootsProtection(player, teamBootsLvl);
-        }
-
         player.updateInventory();
         return true;
     }
 
-    public static void upgradeSword(Player player, ItemStack itemStack) {
+    public static boolean upgradeSword(Player player, ItemStack itemStack) {
         PlayerInventory inventory = player.getInventory();
         ItemStack newSword = itemStack.clone();
         // 清空剑的Lore
@@ -116,7 +102,7 @@ public class UpgradeUtils {
         int oldSwordSlot = -1;
         for (int j = 0; j < 9; j++) {
             ItemStack itemInHotbar = inventory.getItem(j);
-            if (isSword(itemInHotbar)) {
+            if (ItemUtils.isSword(itemInHotbar)) {
                 oldSword = itemInHotbar.clone();
                 oldSwordSlot = j;
                 break;
@@ -147,18 +133,8 @@ public class UpgradeUtils {
             }
         }
 
-        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-        if (game == null) return;
-        Team playerTeam = game.getPlayerTeam(player);
-        if (playerTeam == null) return;
-        Arena arena = Main.getInstance().getArenaManager().getArena(game.getName());
-        if (arena == null) return;
-        int teamSharpnessLvl = arena.getTeamShop().getTeamSharpnessLevel().getOrDefault(playerTeam, 0);
-        if (teamSharpnessLvl != 0) {
-            ItemUtil.givePlayerSharpness(player, teamSharpnessLvl);
-        }
-
         player.updateInventory();
+        return true;
     }
 
     // 垃圾使山，懒得改了;w;
@@ -167,8 +143,8 @@ public class UpgradeUtils {
         if (game == null) return false;
         Team playerTeam = game.getPlayerTeam(player);
         if (playerTeam == null) return false;
-        Arena arena = Main.getInstance().getArenaManager().getArena(game.getName());
-        if (arena == null) return false;
+        TeamUpgrades teamUpgrades = Main.getInstance().getGameUpgradesManager().getArena(game.getName());
+        if (teamUpgrades == null) return false;
 
         ItemStack stack = itemStack.clone();
         ItemMeta meta = stack.getItemMeta();
@@ -176,109 +152,56 @@ public class UpgradeUtils {
         String displayName = ChatColor.stripColor(meta.getDisplayName());
         if (displayName == null) return false;
 
-        TeamShop teamShop = arena.getTeamShop();
-
         switch (displayName) {
             case "武器附魔II":
-                Integer currentSharpness = teamShop.getTeamSharpnessLevel().get(playerTeam);
+                Integer currentSharpness = teamUpgrades.getTeamSharpnessLevel().get(playerTeam);
                 if (currentSharpness != null && currentSharpness >= 2) {
                     return false;
                 }
-                teamShop.getTeamSharpnessLevel().put(playerTeam, 2);
-                for (Player teamPlayer : playerTeam.getPlayers()) {
-                    ItemUtil.givePlayerSharpness(teamPlayer, 2);
-                }
+                teamUpgrades.getTeamSharpnessLevel().put(playerTeam, 2);
                 return true;
 
             case "武器附魔I":
-                Integer currentSharpnessLvl = teamShop.getTeamSharpnessLevel().get(playerTeam);
+                Integer currentSharpnessLvl = teamUpgrades.getTeamSharpnessLevel().get(playerTeam);
                 if (currentSharpnessLvl != null && currentSharpnessLvl >= 1) {
                     return false;
                 }
-                teamShop.getTeamSharpnessLevel().put(playerTeam, 1);
-                for (Player teamPlayer : playerTeam.getPlayers()) {
-                    ItemUtil.givePlayerSharpness(teamPlayer, 1);
-                }
+                teamUpgrades.getTeamSharpnessLevel().put(playerTeam, 1);
                 return true;
 
             case "护腿保护II":
-                Integer currentLeggingsProt = teamShop.getTeamLeggingsProtectionLevel().get(playerTeam);
+                Integer currentLeggingsProt = teamUpgrades.getTeamLeggingsProtectionLevel().get(playerTeam);
                 if (currentLeggingsProt != null && currentLeggingsProt >= 2) {
                     return false;
                 }
-                teamShop.getTeamLeggingsProtectionLevel().put(playerTeam, 2);
-                for (Player teamPlayer : playerTeam.getPlayers()) {
-                    ItemUtil.giveLeggingsProtection(teamPlayer, 2);
-                }
+                teamUpgrades.getTeamLeggingsProtectionLevel().put(playerTeam, 2);
                 return true;
 
             case "护腿保护I":
-                Integer currentLeggingsProtLvl = teamShop.getTeamLeggingsProtectionLevel().get(playerTeam);
+                Integer currentLeggingsProtLvl = teamUpgrades.getTeamLeggingsProtectionLevel().get(playerTeam);
                 if (currentLeggingsProtLvl != null && currentLeggingsProtLvl >= 1) {
                     return false;
                 }
-                teamShop.getTeamLeggingsProtectionLevel().put(playerTeam, 1);
-                for (Player teamPlayer : playerTeam.getPlayers()) {
-                    ItemUtil.giveLeggingsProtection(teamPlayer, 1);
-                }
+                teamUpgrades.getTeamLeggingsProtectionLevel().put(playerTeam, 1);
                 return true;
 
             case "靴子保护II":
-                Integer currentBootsProt = teamShop.getTeamBootsProtectionLevel().get(playerTeam);
+                Integer currentBootsProt = teamUpgrades.getTeamBootsProtectionLevel().get(playerTeam);
                 if (currentBootsProt != null && currentBootsProt >= 2) {
                     return false;
                 }
-                teamShop.getTeamBootsProtectionLevel().put(playerTeam, 2);
-                for (Player teamPlayer : playerTeam.getPlayers()) {
-                    ItemUtil.giveBootsProtection(teamPlayer, 2);
-                }
+                teamUpgrades.getTeamBootsProtectionLevel().put(playerTeam, 2);
                 return true;
 
             case "靴子保护I":
-                Integer currentBootsProtLvl = teamShop.getTeamBootsProtectionLevel().get(playerTeam);
+                Integer currentBootsProtLvl = teamUpgrades.getTeamBootsProtectionLevel().get(playerTeam);
                 if (currentBootsProtLvl != null && currentBootsProtLvl >= 1) {
                     return false;
                 }
-                teamShop.getTeamBootsProtectionLevel().put(playerTeam, 1);
-                for (Player teamPlayer : playerTeam.getPlayers()) {
-                    ItemUtil.giveBootsProtection(teamPlayer, 1);
-                }
+                teamUpgrades.getTeamBootsProtectionLevel().put(playerTeam, 1);
                 return true;
         }
         return false;
-    }
-
-    public static boolean isUpgradeItem(ItemStack itemStack) {
-        if (itemStack == null) return false;
-        return isArmor(itemStack) || isSword(itemStack) || isEnhancedItem(itemStack);
-    }
-
-    public static boolean isEnhancedItem(ItemStack itemStack) {
-        if (itemStack == null) return false;
-        String displayName = "";
-        if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
-            displayName = itemStack.getItemMeta().getDisplayName();
-        }
-        // 然并卵?
-        if (displayName.contains("I") || displayName.contains("II") || displayName.contains("III")) {
-            return true;
-        }
-        return displayName.contains("附魔") || displayName.contains("锋利") || displayName.contains("保护");
-    }
-
-    public static boolean isArmor(ItemStack itemStack) {
-        if (itemStack == null) return false;
-        String typeName = itemStack.getType().name();
-        return typeName.endsWith("_HELMET")
-                || typeName.endsWith("_CHESTPLATE")
-                || typeName.endsWith("_LEGGINGS")
-                || typeName.endsWith("_BOOTS");
-    }
-
-    public static boolean isSword(ItemStack itemStack) {
-        if (itemStack == null) return false;
-        String typeName = itemStack.getType().name();
-        return typeName.endsWith("_SWORD");
     }
 
     private static Integer getMaterialLevel(ItemStack item) {
