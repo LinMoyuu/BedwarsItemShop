@@ -1,11 +1,5 @@
 package me.ram.bedwarsitemshop.utils;
 
-import io.github.bedwarsrel.BedwarsRel;
-import io.github.bedwarsrel.game.Game;
-import io.github.bedwarsrel.game.Team;
-import me.ram.bedwarsitemshop.Main;
-import me.ram.bedwarsitemshop.upgrades.TeamUpgrades;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
