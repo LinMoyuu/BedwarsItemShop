@@ -19,9 +19,9 @@ import java.util.Map;
 public class TeamUpgrades implements Listener {
 
     private final Game game;
-    private final Map<String, Integer> teamSharpnessLevel;
-    private final Map<String, Integer> teamLeggingsProtectionLevel;
-    private final Map<String, Integer> teamBootsProtectionLevel;
+    private Map<String, Integer> teamSharpnessLevel;
+    private Map<String, Integer> teamLeggingsProtectionLevel;
+    private Map<String, Integer> teamBootsProtectionLevel;
 
     /**
      * 升级团队增强功能
@@ -54,25 +54,31 @@ public class TeamUpgrades implements Listener {
         teamBootsProtectionLevel = new HashMap<>();
     }
 
+    public void onEnd() {
+        teamSharpnessLevel = null;
+        teamLeggingsProtectionLevel = null;
+        teamBootsProtectionLevel = null;
+    }
+
     public void givePlayerTeamUpgrade(Player player) {
         Team playerTeam = game.getPlayerTeam(player);
         if (playerTeam == null) return;
-        String teamDisplayName = playerTeam.getDisplayName();
+        String teamName = playerTeam.getName();
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                int teamSharpnessLvl = getTeamSharpnessLevel().getOrDefault(teamDisplayName, 0);
+                int teamSharpnessLvl = getTeamSharpnessLevel().getOrDefault(teamName, 0);
                 if (teamSharpnessLvl != 0) {
                     ItemUtils.givePlayerSharpness(player, teamSharpnessLvl);
                 }
 
-                int teamLeggingsLvl = getTeamLeggingsProtectionLevel().getOrDefault(teamDisplayName, 0);
+                int teamLeggingsLvl = getTeamLeggingsProtectionLevel().getOrDefault(teamName, 0);
                 if (teamLeggingsLvl != 0) {
                     ItemUtils.giveLeggingsProtection(player, teamLeggingsLvl);
                 }
 
-                int teamBootsLvl = getTeamBootsProtectionLevel().getOrDefault(teamDisplayName, 0);
+                int teamBootsLvl = getTeamBootsProtectionLevel().getOrDefault(teamName, 0);
                 if (teamBootsLvl != 0) {
                     ItemUtils.giveBootsProtection(player, teamBootsLvl);
                 }
@@ -95,14 +101,14 @@ public class TeamUpgrades implements Listener {
         }
 
         // 根据升级类型获取当前等级
-        String teamDisplayName = team.getDisplayName();
-        Integer currentLevel = getCurrentLevelForUpgradeType(upgradeInfo.upgradeType, teamDisplayName);
+        String teamName = team.getName();
+        Integer currentLevel = getCurrentLevelForUpgradeType(upgradeInfo.upgradeType, teamName);
         if (currentLevel != null && currentLevel >= upgradeInfo.level) {
             return false; // 已达到或超过目标等级
         }
 
         // 执行升级
-        setLevelForUpgradeType(upgradeInfo.upgradeType, teamDisplayName, upgradeInfo.level);
+        setLevelForUpgradeType(upgradeInfo.upgradeType, teamName, upgradeInfo.level);
         return true;
     }
 
@@ -110,17 +116,17 @@ public class TeamUpgrades implements Listener {
      * 获取特定升级类型的当前等级
      *
      * @param upgradeType 升级类型
-     * @param teamDisplayName 队伍名称
+     * @param teamName 队伍名称
      * @return 当前等级
      */
-    private Integer getCurrentLevelForUpgradeType(UpgradeType upgradeType, String teamDisplayName) {
+    private Integer getCurrentLevelForUpgradeType(UpgradeType upgradeType, String teamName) {
         switch (upgradeType) {
             case SHARPNESS:
-                return teamSharpnessLevel.get(teamDisplayName);
+                return teamSharpnessLevel.get(teamName);
             case LEGGINGS_PROTECTION:
-                return teamLeggingsProtectionLevel.get(teamDisplayName);
+                return teamLeggingsProtectionLevel.get(teamName);
             case BOOTS_PROTECTION:
-                return teamBootsProtectionLevel.get(teamDisplayName);
+                return teamBootsProtectionLevel.get(teamName);
             default:
                 return 0;
         }
@@ -130,20 +136,24 @@ public class TeamUpgrades implements Listener {
      * 设置特定升级类型的等级
      *
      * @param upgradeType 升级类型
-     * @param teamDisplayName 队伍名称
+     * @param teamName 队伍名称
      * @param level       等级
      */
-    private void setLevelForUpgradeType(UpgradeType upgradeType, String teamDisplayName, Integer level) {
+    private void setLevelForUpgradeType(UpgradeType upgradeType, String teamName, Integer level) {
         switch (upgradeType) {
             case SHARPNESS:
-                teamSharpnessLevel.put(teamDisplayName, level);
+                teamSharpnessLevel.put(teamName, level);
                 break;
             case LEGGINGS_PROTECTION:
-                teamLeggingsProtectionLevel.put(teamDisplayName, level);
+                teamLeggingsProtectionLevel.put(teamName, level);
                 break;
             case BOOTS_PROTECTION:
-                teamBootsProtectionLevel.put(teamDisplayName, level);
+                teamBootsProtectionLevel.put(teamName, level);
                 break;
+        }
+        Team team = game.getTeam(teamName);
+        for (Player player : team.getPlayers()) {
+            givePlayerTeamUpgrade(player);
         }
     }
 

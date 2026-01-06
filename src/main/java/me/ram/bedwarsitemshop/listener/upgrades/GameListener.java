@@ -20,8 +20,11 @@ public class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEnd(BedwarsGameEndEvent e) {
-        Game game = e.getGame();
-        Main.getInstance().getGameUpgradesManager().removeArena(game.getName());
+        String gameName = e.getGame().getName();
+        if (Main.getInstance().getGameUpgradesManager().getArenas().containsKey(gameName)) {
+            Main.getInstance().getGameUpgradesManager().getArenas().get(gameName).onEnd();
+        }
+        Main.getInstance().getGameUpgradesManager().getArenas().remove(gameName);
     }
 
 }
