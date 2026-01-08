@@ -80,16 +80,6 @@ public class UpgradeUtils {
         PlayerInventory inventory = player.getInventory();
         ItemStack newSword = itemStack.clone();
 
-        if (newSword.hasItemMeta()) {
-            ItemMeta meta = newSword.getItemMeta();
-            List<String> lore = meta.getLore();
-            if (lore != null && !lore.isEmpty()) {
-                lore.remove(lore.size() - 1);
-                meta.setLore(lore);
-                newSword.setItemMeta(meta);
-            }
-        }
-
         // 在购买剑后 花雨庭会将之前的剑放进背包内
         // 没能想出什么方法 也没见过背包满的花雨庭怎么处理的 就这么生草了
         // 在Hotbar中寻找玩家当前的剑
