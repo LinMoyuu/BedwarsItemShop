@@ -2,6 +2,7 @@ package me.ram.bedwarsitemshop.shop;
 
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
+import io.github.bedwarsrel.utils.SoundMachine;
 import io.github.bedwarsrel.utils.Utils;
 import io.github.bedwarsrel.villager.MerchantCategory;
 import io.github.bedwarsrel.villager.VillagerTrade;
@@ -117,10 +118,15 @@ public class NewShop implements Shop {
 
         if (e.isShiftClick()) {
             int ba = 64 / currentItem.getAmount();
-            ItemShopUtils.buyItem(game, player, currentItem, resname, ba);
+            if (game.getPlayerSettings(player).oneStackPerShift()) {
+                ItemShopUtils.buyItem(game, player, currentItem, resname, ba);
+            } else {
+                while (ItemShopUtils.buyItem(game, player, currentItem, resname, ba));
+            }
         } else {
             ItemShopUtils.buyItem(game, player, currentItem, resname, 1);
         }
+        player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), 1.0f, 1.0f);
     }
 
     private VillagerTrade getTradingItem(MerchantCategory category, ItemStack stack, Game game, Player player) {

@@ -163,14 +163,14 @@ public class ItemShopUtils {
         player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), 1.0f, 1.0f);
     }
 
-    public static void buyItem(Game game, Player player, ItemStack itemStack, Map<String, ItemStack> resname, int a) {
+    public static boolean buyItem(Game game, Player player, ItemStack itemStack, Map<String, ItemStack> resname, int buyCount) {
         if (game == null || player == null || itemStack == null || resname == null) {
-            return;
+            return false;
         }
 
         List<String> loreList = itemStack.getItemMeta().getLore();
         if (loreList == null || loreList.isEmpty()) {
-            return;
+            return false;
         }
 
         String lore = loreList.get(loreList.size() - 1);
@@ -179,16 +179,11 @@ public class ItemShopUtils {
             lore_2 = loreList.get(loreList.size() - 2);
         }
 
-        for (int i = 0; i < a; i++) {
+        for (int i = 0; i < buyCount; i++) {
             boolean hasEnoughResources = isEnough(game, player, lore, resname);
             boolean hasEnoughResources2 = (lore_2 == null) || isEnough(game, player, lore_2, resname);
 
             if (hasEnoughResources && hasEnoughResources2) {
-                takeItem(game, player, lore, resname);
-                if (lore_2 != null) {
-                    takeItem(game, player, lore_2, resname);
-                }
-
                 ItemStack item = itemStack.clone();
                 List<String> lores = new ArrayList<>(item.getItemMeta().getLore());
                 if (!lores.isEmpty()) {
@@ -197,18 +192,28 @@ public class ItemShopUtils {
                 ItemMeta meta = item.getItemMeta();
                 meta.setLore(lores);
                 item.setItemMeta(meta);
-                player.getInventory().addItem(item);
+
+                HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(item);
+                if (!leftover.isEmpty()) {
+                    return false;
+                }
+
+                takeItem(game, player, lore, resname);
+                if (lore_2 != null) {
+                    takeItem(game, player, lore_2, resname);
+                }
 
                 if (i == 0 && !Config.message_buy.isEmpty()) {
                     String name = getItemDisplayName(item);
                     player.sendMessage(Config.message_buy.replace("{item}", name));
+                    return true;
                 }
             } else if (i == 0) {
                 player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
-                break;
+                return false;
             }
         }
-        player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), 1.0f, 1.0f);
+        return true;
     }
 
     public static boolean isEnough(Game game, Player player, String line, Map<String, ItemStack> resname) {

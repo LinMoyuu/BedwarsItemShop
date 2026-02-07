@@ -15,9 +15,9 @@ public class Config {
     public static String message_buy;
     public static List<String> item_frame;
     public static List<String> item_back;
-    private static FileConfiguration language_config;
     public static boolean isBedwarsScoreBoardAddonEnabled = false;
     public static boolean isBedwarsXPEnabled = false;
+    private static FileConfiguration language_config;
 
     public static void loadConfig() {
         File folder = new File(Main.getInstance().getDataFolder(), "/");
