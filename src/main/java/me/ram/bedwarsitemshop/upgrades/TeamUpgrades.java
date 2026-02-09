@@ -83,7 +83,7 @@ public class TeamUpgrades implements Listener {
                     ItemUtils.giveBootsProtection(player, teamBootsLvl);
                 }
             }
-        }.runTaskLater(me.ram.bedwarsscoreboardaddon.Main.getInstance(), 1L);
+        }.runTaskLater(Main.getInstance(), 1L);
     }
 
     /**
