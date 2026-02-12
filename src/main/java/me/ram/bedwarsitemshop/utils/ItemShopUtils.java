@@ -163,7 +163,7 @@ public class ItemShopUtils {
         player.playSound(player.getLocation(), SoundMachine.get("ITEM_PICKUP", "ENTITY_ITEM_PICKUP"), 1.0f, 1.0f);
     }
 
-    public static boolean buyItem(Game game, Player player, ItemStack itemStack, Map<String, ItemStack> resname, int buyCount) {
+    public static boolean buyItem(Game game, Player player, ItemStack itemStack, Map<String, ItemStack> resname, int buyCount, boolean isFullStackPerShift) {
         if (game == null || player == null || itemStack == null || resname == null) {
             return false;
         }
@@ -209,11 +209,17 @@ public class ItemShopUtils {
                     return true;
                 }
             } else if (i == 0) {
-                player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
+                if (!isFullStackPerShift)
+                    player.sendMessage(ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix")) + "§c " + ColorUtil.color(BedwarsRel._l(player, "errors.notenoughress")));
                 return false;
             }
         }
         return true;
+    }
+
+    // 为兼容批量Shift购买做的套层处理
+    public static boolean buyItem(Game game, Player player, ItemStack itemStack, Map<String, ItemStack> resname, int buyCount) {
+        return ItemShopUtils.buyItem(game, player, itemStack, resname, buyCount, false);
     }
 
     public static boolean isEnough(Game game, Player player, String line, Map<String, ItemStack> resname) {

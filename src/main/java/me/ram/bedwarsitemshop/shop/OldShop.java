@@ -106,7 +106,9 @@ public class OldShop implements Shop {
             if (game.getPlayerSettings(player).oneStackPerShift()) {
                 ItemShopUtils.buyItem(game, player, currentItem, resname, ba);
             } else {
-                while (ItemShopUtils.buyItem(game, player, currentItem, resname, ba));
+                if (ItemShopUtils.buyItem(game, player, currentItem, resname, ba)) {
+                    while (ItemShopUtils.buyItem(game, player, currentItem, resname, ba, true)) ;
+                }
             }
         } else {
             ItemShopUtils.buyItem(game, player, currentItem, resname, 1);

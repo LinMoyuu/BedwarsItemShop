@@ -113,7 +113,10 @@ public class RelLikeShop implements Shop {
             if (game.getPlayerSettings(player).oneStackPerShift()) {
                 ItemShopUtils.buyItem(game, player, currentItem, resname, ba);
             } else {
-                while (ItemShopUtils.buyItem(game, player, currentItem, resname, ba));
+                // 先判断是否有足够的资源购买(即初次购买有提示资源不足) 然后再循环购买 这样可以绕过提示购买资源不足
+                if (ItemShopUtils.buyItem(game, player, currentItem, resname, ba)) {
+                    while (ItemShopUtils.buyItem(game, player, currentItem, resname, ba, true)) ;
+                }
             }
         } else {
             ItemShopUtils.buyItem(game, player, currentItem, resname, 1);
