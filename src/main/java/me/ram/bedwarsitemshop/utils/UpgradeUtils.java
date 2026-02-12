@@ -6,7 +6,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class UpgradeUtils {
+
+    private static final List<String> ARMOR_LORE = Arrays.asList("死亡不掉落", "禁止移动");
 
     public static boolean upgradeArmor(Player player, ItemStack itemStack) {
         Material material = itemStack.getType();
@@ -58,6 +63,11 @@ public class UpgradeUtils {
         // 只升级那些需要升级的装备
         ItemMeta leggingsMeta = leggings.getItemMeta();
         if (leggingsMeta != null) {
+            if (leggingsMeta.getLore() == null) {
+                leggingsMeta.setLore(ARMOR_LORE);
+            } else {
+                leggingsMeta.getLore().addAll(ARMOR_LORE);
+            }
             leggingsMeta.spigot().setUnbreakable(true);
             leggings.setItemMeta(leggingsMeta);
         }
@@ -65,6 +75,11 @@ public class UpgradeUtils {
 
         ItemMeta bootsMeta = boots.getItemMeta();
         if (bootsMeta != null) {
+            if (bootsMeta.getLore() == null) {
+                bootsMeta.setLore(ARMOR_LORE);
+            } else {
+                bootsMeta.getLore().addAll(ARMOR_LORE);
+            }
             bootsMeta.spigot().setUnbreakable(true);
             boots.setItemMeta(bootsMeta);
         }
