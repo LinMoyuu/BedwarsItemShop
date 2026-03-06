@@ -17,6 +17,11 @@ public class Config {
     public static List<String> item_back;
     public static boolean isBedwarsScoreBoardAddonEnabled = false;
     public static boolean isBedwarsXPEnabled = false;
+    public static int upgrade_give_delay;
+    public static String upgrade_type_prefix_sharpness;
+    public static String upgrade_type_prefix_leggings_protection;
+    public static String upgrade_type_prefix_boots_protection;
+    public static List<String> upgrade_armor_lore;
     private static FileConfiguration language_config;
 
     public static void loadConfig() {
@@ -33,11 +38,16 @@ public class Config {
         item_back = ColorUtil.colorList(config.getStringList("item.back"));
         isBedwarsScoreBoardAddonEnabled = Main.getInstance().getServer().getPluginManager().isPluginEnabled("BedwarsScoreBoardAddon");
         isBedwarsXPEnabled = Main.getInstance().getServer().getPluginManager().isPluginEnabled("BedwarsXP");
+        upgrade_give_delay = config.getInt("upgrade.give_delay");
+        upgrade_armor_lore = ColorUtil.colorList(config.getStringList("upgrade.armor_lore"));
+        upgrade_type_prefix_sharpness = ColorUtil.color(config.getString("upgrade.type_prefix.sharpness"));
+        upgrade_type_prefix_leggings_protection = ColorUtil.color(config.getString("upgrade.type_prefix.leggings_protection"));
+        upgrade_type_prefix_boots_protection = ColorUtil.color(config.getString("upgrade.type_prefix.boots_protection"));
     }
 
     private static FileConfiguration getVerifiedConfig(String fileName) {
         Map<String, String> configVersion = new HashMap<String, String>();
-        configVersion.put("config.yml", "2");
+        configVersion.put("config.yml", "3");
         configVersion.put("language.yml", "1");
         File file = new File(Main.getInstance().getDataFolder(), "/" + fileName);
         if (!file.exists()) {

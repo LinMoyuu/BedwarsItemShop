@@ -1,5 +1,5 @@
 #配置版本 (请勿修改!)
-version: 2
+version: 3
 
 #区域语言
 locale: zh_CN
@@ -25,3 +25,22 @@ item:
   #返回
   back:
   - "&f返回"
+
+
+## 升级
+upgrade:
+  ## 总有些时候时机不对, 所以那就加延迟...
+  ## 执行函数后多久给予玩家附魔(单位: Tick)
+  give_delay: 1
+
+  ## 购买增益判断名字前缀自定义(例如: "武器附魔...“)
+  ## 需要与商店配置中的前缀一致(包括颜色符号)
+  type_prefix:
+    sharpness: "武器附魔"
+    leggings_protection: "护腿保护"
+    boots_protection: "靴子保护"
+
+  ## 升级装备的Lore
+  armor_lore:
+    - "死亡不掉落"
+    - "禁止移动"

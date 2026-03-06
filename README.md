@@ -10,4 +10,4 @@
 
 > 前置依赖：
 - [BedwarsRel 1.3.6](https://www.spigotmc.org/resources/6799/)
-- [BedwarsScoreBoardAddon(非原版)](https://github.com/LinMoyuu/BedwarsScoreBoardAddon/)
+- [BedwarsScoreBoardAddon](https://github.com/TheRamU/BedwarsScoreBoardAddon/)

@@ -4,6 +4,7 @@ import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
 import lombok.Getter;
 import me.ram.bedwarsitemshop.Main;
+import me.ram.bedwarsitemshop.config.Config;
 import me.ram.bedwarsitemshop.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -83,7 +84,7 @@ public class TeamUpgrades implements Listener {
                     ItemUtils.giveBootsProtection(player, teamBootsLvl);
                 }
             }
-        }.runTaskLater(Main.getInstance(), 1L);
+        }.runTaskLater(Main.getInstance(), Config.upgrade_give_delay);
     }
 
     /**
@@ -197,9 +198,9 @@ public class TeamUpgrades implements Listener {
     // 定义升级类型枚举
     @Getter
     public enum UpgradeType {
-        SHARPNESS("武器附魔"),
-        LEGGINGS_PROTECTION("护腿保护"),
-        BOOTS_PROTECTION("靴子保护");
+        SHARPNESS(Config.upgrade_type_prefix_sharpness),
+        LEGGINGS_PROTECTION(Config.upgrade_type_prefix_leggings_protection),
+        BOOTS_PROTECTION(Config.upgrade_type_prefix_boots_protection);
 
         private final String displayNamePrefix;
 
