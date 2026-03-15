@@ -101,23 +101,19 @@ public class UpgradeUtils {
         // 在购买剑后 花雨庭会将之前的剑放进背包内
         // 没能想出什么方法 也没见过背包满的花雨庭怎么处理的 就这么生草了
         // 在Hotbar中寻找玩家当前的剑
-        ItemStack oldSword = null;
-        int oldSwordSlot = -1;
-        for (int j = 0; j < 9; j++) {
-            ItemStack itemInHotbar = inventory.getItem(j);
-            if (ItemUtils.isSword(itemInHotbar)) {
-                oldSword = itemInHotbar.clone();
-                oldSwordSlot = j;
-                break;
-            }
+        ItemStack oldSword;
+        int oldSwordSlot = 0;
+        ItemStack itemInHotbar = inventory.getItem(oldSwordSlot);
+        if (ItemUtils.isSword(itemInHotbar)) {
+            oldSword = itemInHotbar.clone();
+        } else {
+            player.getInventory().addItem(newSword);
+            player.updateInventory();
+            return true;
         }
 
         // 将新剑放到旧剑的位置上. 如果没找到旧剑 则直接添加
-        if (oldSwordSlot != -1) {
-            inventory.setItem(oldSwordSlot, newSword);
-        } else {
-            inventory.addItem(newSword);
-        }
+        inventory.setItem(oldSwordSlot, newSword);
 
         // 将旧剑移动到背包
         if (oldSword != null) {
